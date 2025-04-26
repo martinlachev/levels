@@ -1,3 +1,4 @@
+import 'package:utils/router/app_route.dart';
 import 'package:utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -18,16 +19,16 @@ class AppRouter {
     );
   }
 
-  void goTo({required String route, Object? parameters}) {
-    navigatorKey.currentState!.context.go(route, extra: parameters);
+  void goTo({required AppRoute route, Object? parameters}) {
+    navigatorKey.currentState!.context.go(route.path, extra: parameters);
   }
 
   Future<T?> push<T extends Object?>({
-    required String route,
+    required AppRoute route,
     Object? parameters,
   }) async {
     return await navigatorKey.currentState!.context.push(
-      route,
+      route.path,
       extra: parameters,
     );
   }
