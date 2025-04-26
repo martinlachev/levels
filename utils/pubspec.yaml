@@ -10,6 +10,20 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # DI
+  kiwi: ^5.0.1
+  # Networking
+  http: ^1.2.2
+  http_interceptor: ^2.0.0
+  # State management
+  equatable: ^2.0.7
+  flutter_bloc: ^9.0.0
+  # Storages
+  shared_preferences: ^2.5.2
+  flutter_secure_storage: ^9.2.4
+  # Routing
+  go_router: ^14.8.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
