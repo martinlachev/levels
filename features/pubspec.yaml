@@ -11,8 +11,10 @@ dependencies:
   flutter:
     sdk: flutter
 
+  #Internal packages
   utils:
     path: ../utils
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

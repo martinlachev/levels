@@ -18,6 +18,7 @@ final class HTTPClient extends BaseHTTPClient {
     MultipartFile? multipartBody,
     Map<String, String>? multipartFields,
     Map<String, String>? headers = const {'Content-Type': 'application/json'},
+    T Function(List<dynamic>)? fromListJson,
     T Function(Map<String, dynamic>)? fromJson,
   }) async {
     BaseRequest request;
@@ -54,6 +55,7 @@ final class HTTPClient extends BaseHTTPClient {
 
   Future<Result<T, HttpException>> _processResponse<T extends Object>({
     required BaseRequest request,
+    T Function(List<dynamic>)? fromListJson,
     T Function(Map<String, dynamic>)? fromJson,
   }) async {
     final client = InterceptedClient.build(
@@ -68,11 +70,17 @@ final class HTTPClient extends BaseHTTPClient {
       if (statusCode >= 200 && statusCode < 300) {
         final response = await Response.fromStream(streamedResponse);
 
-        if (fromJson == null) {
-          return Success(response.body as T);
+        final decoded = jsonDecode(response.body);
+
+        if (fromListJson != null && decoded is List) {
+          return Success(fromListJson(decoded));
         }
 
-        return Success(fromJson(jsonDecode(response.body)));
+        if (fromJson != null && decoded is Map<String, dynamic>) {
+          return Success(fromJson(decoded));
+        }
+
+        return Success(response.body as T);
       }
 
       final error = await Response.fromStream(streamedResponse);

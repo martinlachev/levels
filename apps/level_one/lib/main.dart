@@ -1,20 +1,22 @@
+import 'package:level_one/level_one.dart';
+import 'package:utils/utils.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MainApp());
-}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  // Register the DI modules
+  await DI.init(components: AppDI());
 
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
-  }
+  // Initialize the app router
+  final appRouter = await DI.resolve<AppRouter>().initialize();
+
+  runApp(
+    MaterialApp.router(
+      title: 'Level One',
+      debugShowCheckedModeBanner: false,
+      routerConfig: appRouter,
+      theme: ThemeData(primarySwatch: Colors.blue),
+    ),
+  );
 }

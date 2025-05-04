@@ -1,15 +1,17 @@
-import 'package:utils/router/app_route.dart';
 import 'package:utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:go_router/go_router.dart';
 
-class AppRouter {
+abstract class AppRouter {
   final navigatorKey = GlobalKey<NavigatorState>();
   final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
-  Future<GoRouter> initialize({required List<GoRoute> routes}) async {
-    final initialLocation = await _getInitialLocation();
+  Future<String> getInitialLocation();
+  List<RouteBase> get routes;
+
+  Future<GoRouter> initialize() async {
+    _clearSecureStorageOnFirstInstall();
+    final initialLocation = await getInitialLocation();
 
     return GoRouter(
       navigatorKey: navigatorKey,
@@ -35,12 +37,6 @@ class AppRouter {
 
   void pop<T extends Object>([T? result]) {
     return navigatorKey.currentState!.context.pop(result);
-  }
-
-  Future<String> _getInitialLocation() async {
-    _clearSecureStorageOnFirstInstall();
-
-    return '/login';
   }
 
   void _clearSecureStorageOnFirstInstall() {
